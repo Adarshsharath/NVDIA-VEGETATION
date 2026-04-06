@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nature-dark: #0f3d2e;
+  --color-nature-leaf: #2ecc71;
+  --color-nature-beige: #f5f5dc;
+  --color-nature-accent: #27ae60;
+}
+
+body {
+  background: radial-gradient(circle at top right, #1a4d3c, #0f3d2e),
+              url('https://www.transparenttextures.com/patterns/leaf.png');
+  background-color: var(--color-nature-dark);
+  color: var(--color-nature-beige);
+  @apply font-sans min-h-screen overflow-x-hidden;
+}
+
+.glass {
+  @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl;
+}
+
+.glass-matte {
+  @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl;
+}
+
+.btn-primary {
+  @apply px-6 py-2 bg-nature-leaf hover:bg-nature-accent text-white rounded-xl 
+         transition-all duration-300 transform hover:scale-105 active:scale-95
+         shadow-lg shadow-nature-leaf/20;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-nature-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-nature-leaf), transparent 50%);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-nature-leaf);
+}
