@@ -51,6 +51,26 @@ const App = () => {
         setResults(null);
     };
 
+    const downloadBothImages = () => {
+        if (!results) return;
+
+        // Download Heatmap
+        const linkHeatmap = document.createElement('a');
+        linkHeatmap.href = `data:image/png;base64,${results.ndvi_heatmap}`;
+        linkHeatmap.download = 'ndvi_heatmap.png';
+        document.body.appendChild(linkHeatmap);
+        linkHeatmap.click();
+        document.body.removeChild(linkHeatmap);
+
+        // Download Segmented Image
+        const linkSegmented = document.createElement('a');
+        linkSegmented.href = `data:image/png;base64,${results.segmented_image}`;
+        linkSegmented.download = 'ndvi_segmentation.png';
+        document.body.appendChild(linkSegmented);
+        linkSegmented.click();
+        document.body.removeChild(linkSegmented);
+    };
+
     return (
         <div className="min-h-screen p-4 md:p-8 flex flex-col items-center">
             {/* Header */}
@@ -111,8 +131,20 @@ const App = () => {
                                 <div className="space-y-4">
                                     <div className="relative group rounded-2xl overflow-hidden shadow-2xl">
                                         <img src={preview} alt="Preview" className="w-full h-auto object-cover max-h-[300px]" />
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <button onClick={reset} className="p-3 bg-red-500/80 rounded-full text-white hover:bg-red-500 ring-4 ring-white/10">
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                                            <a 
+                                                href={preview} 
+                                                download="original_image.png" 
+                                                className="p-3 bg-nature-leaf/80 rounded-full text-white hover:bg-nature-accent ring-4 ring-white/10 transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
+                                                title="Download Original"
+                                            >
+                                                <Download className="w-6 h-6" />
+                                            </a>
+                                            <button 
+                                                onClick={reset} 
+                                                className="p-3 bg-red-500/80 rounded-full text-white hover:bg-red-500 ring-4 ring-white/10 transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
+                                                title="Reset Image"
+                                            >
                                                 <RefreshCcw className="w-6 h-6" />
                                             </button>
                                         </div>
@@ -201,14 +233,13 @@ const App = () => {
                                                     <CheckCircle2 className="w-4 h-4" /> Green-NIR Proxy
                                                 </p>
                                             </div>
-                                            <a 
-                                                href={`data:image/png;base64,${results.ndvi_heatmap}`} 
-                                                download="ndvi_analysis.png"
-                                                className="p-2 bg-nature-leaf/20 rounded-lg hover:bg-nature-leaf/40 transition-colors"
-                                                title="Download Result"
+                                            <button 
+                                                onClick={downloadBothImages}
+                                                className="p-2 bg-nature-leaf/20 rounded-lg hover:bg-nature-leaf/40 transition-colors cursor-pointer flex items-center justify-center"
+                                                title="Download Both Images"
                                             >
                                                 <Download className="w-5 h-5 text-nature-leaf" />
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -226,21 +257,67 @@ const App = () => {
 
                                     {/* Image Compare */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="glass-matte p-4 rounded-3xl relative overflow-hidden">
-                                            <span className="inline-block px-3 py-1 bg-white/5 rounded-lg text-[10px] font-bold uppercase tracking-widest mb-3">NDVI Spectral Heatmap</span>
-                                            <img 
-                                                src={`data:image/png;base64,${results.ndvi_heatmap}`} 
-                                                alt="NDVI Heatmap" 
-                                                className="w-full rounded-2xl shadow-xl hover:scale-[1.02] transition-transform duration-500 border border-white/10" 
-                                            />
+                                        <div className="glass-matte p-4 rounded-3xl relative overflow-hidden group/card">
+                                            <div className="flex justify-between items-center mb-3">
+                                                <span className="inline-block px-3 py-1 bg-white/5 rounded-lg text-[10px] font-bold uppercase tracking-widest">NDVI Spectral Heatmap</span>
+                                                <a 
+                                                    href={`data:image/png;base64,${results.ndvi_heatmap}`} 
+                                                    download="ndvi_heatmap.png"
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-nature-leaf/10 hover:bg-nature-leaf text-nature-leaf hover:text-white rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md shadow-nature-leaf/5"
+                                                    title="Download Heatmap"
+                                                >
+                                                    <Download className="w-3.5 h-3.5" />
+                                                    <span>Download</span>
+                                                </a>
+                                            </div>
+                                            <div className="relative overflow-hidden rounded-2xl group/img">
+                                                <img 
+                                                    src={`data:image/png;base64,${results.ndvi_heatmap}`} 
+                                                    alt="NDVI Heatmap" 
+                                                    className="w-full rounded-2xl shadow-xl group-hover/img:scale-[1.02] transition-transform duration-500 border border-white/10" 
+                                                />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                    <a 
+                                                        href={`data:image/png;base64,${results.ndvi_heatmap}`} 
+                                                        download="ndvi_heatmap.png"
+                                                        className="p-3 bg-white/10 hover:bg-nature-leaf/80 rounded-full text-white backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 ring-4 ring-white/10 flex items-center justify-center"
+                                                        title="Download Heatmap"
+                                                    >
+                                                        <Download className="w-6 h-6" />
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="glass-matte p-4 rounded-3xl relative overflow-hidden">
-                                            <span className="inline-block px-3 py-1 bg-white/5 rounded-lg text-[10px] font-bold uppercase tracking-widest mb-3">Health Segmentation (R/G)</span>
-                                            <img 
-                                                src={`data:image/png;base64,${results.segmented_image}`} 
-                                                alt="Segmented" 
-                                                className="w-full rounded-2xl shadow-xl hover:scale-[1.02] transition-transform duration-500 border border-white/10" 
-                                            />
+                                        <div className="glass-matte p-4 rounded-3xl relative overflow-hidden group/card">
+                                            <div className="flex justify-between items-center mb-3">
+                                                <span className="inline-block px-3 py-1 bg-white/5 rounded-lg text-[10px] font-bold uppercase tracking-widest">Health Segmentation (R/G)</span>
+                                                <a 
+                                                    href={`data:image/png;base64,${results.segmented_image}`} 
+                                                    download="ndvi_segmentation.png"
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-nature-leaf/10 hover:bg-nature-leaf text-nature-leaf hover:text-white rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md shadow-nature-leaf/5"
+                                                    title="Download Segmented Image"
+                                                >
+                                                    <Download className="w-3.5 h-3.5" />
+                                                    <span>Download</span>
+                                                </a>
+                                            </div>
+                                            <div className="relative overflow-hidden rounded-2xl group/img">
+                                                <img 
+                                                    src={`data:image/png;base64,${results.segmented_image}`} 
+                                                    alt="Segmented" 
+                                                    className="w-full rounded-2xl shadow-xl group-hover/img:scale-[1.02] transition-transform duration-500 border border-white/10" 
+                                                />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                    <a 
+                                                        href={`data:image/png;base64,${results.segmented_image}`} 
+                                                        download="ndvi_segmentation.png"
+                                                        className="p-3 bg-white/10 hover:bg-nature-leaf/80 rounded-full text-white backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 ring-4 ring-white/10 flex items-center justify-center"
+                                                        title="Download Segmented Image"
+                                                    >
+                                                        <Download className="w-6 h-6" />
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
